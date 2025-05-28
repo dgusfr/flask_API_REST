@@ -1,0 +1,31 @@
+# Ambiente virtual
+venv/
+ENV/
+env/
+
+# Cache do Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Arquivos temporários
+*.log
+*.pot
+*.pyc
+*.pyo
+*.pyd
+*.db
+
+# Configurações do VS Code
+.vscode/
+
+# Arquivos do sistema operacional
+.DS_Store
+Thumbs.db
+
+# Armazenamento de tokens e secrets (não há no projeto atual, mas boa prática)
+*.env
+
+# IDEs
+.idea/
+*.iml
