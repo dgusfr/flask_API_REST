@@ -108,6 +108,7 @@ Atualiza informações de um jogo.
 
 **Headers:**
 
+
 * `Authorization: Bearer <token>`
 
 **Corpo (parcial ou completo):**
