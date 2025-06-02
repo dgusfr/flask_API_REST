@@ -27,16 +27,6 @@ class Game(db.Model):
     year = db.Column(db.Integer, nullable=False)
     price = db.Column(db.Float, nullable=False)
 
-# ========== Inicializa o banco e cria usuário padrão ==========
-@app.before_first_request
-def create_tables():
-    db.create_all()
-    # Usuário padrão, inserido apenas se não existir
-    if not User.query.filter_by(email="diego@email.com").first():
-        user = User(name="Diego", email="diego@email.com", password="1234")
-        db.session.add(user)
-        db.session.commit()
-
 # ========== Middleware de autenticação JWT ==========
 def token_required(f):
     @wraps(f)
@@ -129,6 +119,13 @@ def delete_game(game_id):
     db.session.commit()
     return jsonify({"message": "Jogo excluído com sucesso."}), 200
 
-# ========== Execução ==========
+# ========== Inicialização do banco e execução ==========
 if __name__ == "__main__":
+    with app.app_context():
+        db.create_all()
+        # Cria usuário padrão se não existir
+        if not User.query.filter_by(email="diego@email.com").first():
+            user = User(name="Diego", email="diego@email.com", password="1234")
+            db.session.add(user)
+            db.session.commit()
     app.run(port=3000, debug=True)
