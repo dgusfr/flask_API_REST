@@ -13,6 +13,7 @@ GameVerse é uma API REST desenvolvida em **Python Flask**, com autenticação v
 
 ![Concluído](http://img.shields.io/static/v1?label=STATUS&message=CONCLUIDO&color=GREEN&style=for-the-badge)
 
+
 ## Descrição
 
 A aplicação permite que usuários autenticados possam:
