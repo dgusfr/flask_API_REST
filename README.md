@@ -53,6 +53,7 @@ Autentica o usuário e retorna o token JWT.
 
 ---
 
+
 ### 📚 GET /games
 
 Retorna a lista de todos os jogos.
