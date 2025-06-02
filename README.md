@@ -139,8 +139,6 @@ Exclui um jogo.
 ## Autor
 
 Desenvolvido por **Diego Franco**.
-Entre em contato para sugestões ou melhorias! 🚀
-
 ---
 
 
