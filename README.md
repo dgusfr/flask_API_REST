@@ -29,6 +29,7 @@ A autenticação é feita através de um endpoint específico que gera um **toke
 
 ## Endpoints
 
+
 ### 🔑 POST /auth
 
 Autentica o usuário e retorna o token JWT.
