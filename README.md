@@ -16,6 +16,7 @@ GameVerse é uma API REST desenvolvida em **Python Flask**, com autenticação v
 
 ## Descrição
 
+
 A aplicação permite que usuários autenticados possam:
 
 - Obter a lista de jogos
