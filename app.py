@@ -156,7 +156,6 @@ def method_not_allowed(error):
 def internal_server_error(error):
     return jsonify({"error": "Erro interno do servidor"}), 500
 
-# Erro de validação Marshmallow
 from marshmallow import ValidationError
 
 @app.errorhandler(ValidationError)
