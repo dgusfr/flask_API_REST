@@ -4,7 +4,11 @@ from flask_sqlalchemy import SQLAlchemy
 import jwt
 import datetime
 from functools import wraps
+from schemas import GameSchema, LoginSchema
+from marshmallow import ValidationError
 
+game_schema = GameSchema()
+login_schema = LoginSchema()
 
 # ========== Configuração da aplicação ==========
 app = Flask(__name__)
