@@ -7,10 +7,7 @@ from functools import wraps
 from schemas import GameSchema, LoginSchema
 from marshmallow import ValidationError
 
-game_schema = GameSchema()
-login_schema = LoginSchema()
-
-# ========== Configuração da aplicação ==========
+# ======= Configuração =======
 app = Flask(__name__)
 CORS(app)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///gameverse.db'
@@ -19,7 +16,7 @@ app.config['SECRET_KEY'] = 'v3ry$3cur3&UnpredictableSecretKey!123'
 db = SQLAlchemy(app)
 JWT_ALGORITHM = 'HS256'
 
-# ========== Modelos ==========
+# ======= Modelos =======
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(80), nullable=False)
@@ -32,7 +29,7 @@ class Game(db.Model):
     year = db.Column(db.Integer, nullable=False)
     price = db.Column(db.Float, nullable=False)
 
-# ========== Middleware de autenticação JWT ==========
+# ======= JWT Auth Middleware =======
 def token_required(f):
     @wraps(f)
     def decorated(*args, **kwargs):
@@ -49,7 +46,11 @@ def token_required(f):
         return f(*args, **kwargs)
     return decorated
 
-# ========== Rotas ==========
+# ======= Schemas Marshmallow =======
+game_schema = GameSchema()
+login_schema = LoginSchema()
+
+# ======= Rotas =======
 @app.route("/")
 def home():
     return jsonify({"message": "Bem-vindo à API GameVerse (Flask + SQLAlchemy)!"}), 200
@@ -57,10 +58,7 @@ def home():
 @app.route("/auth", methods=["POST"])
 def login():
     json_data = request.get_json()
-    try:
-        validated_data = login_schema.load(json_data)
-    except ValidationError as err:
-        return jsonify({"errors": err.messages}), 400
+    validated_data = login_schema.load(json_data)
 
     user = User.query.filter_by(email=validated_data["email"]).first()
     if not user or user.password != validated_data["password"]:
@@ -96,10 +94,7 @@ def get_game(game_id):
 @token_required
 def create_game():
     json_data = request.get_json()
-    try:
-        validated_data = game_schema.load(json_data)
-    except ValidationError as err:
-        return jsonify({"errors": err.messages}), 400
+    validated_data = game_schema.load(json_data)
 
     new_game = Game(**validated_data)
     db.session.add(new_game)
@@ -107,18 +102,20 @@ def create_game():
 
     return jsonify({"message": "Jogo cadastrado com sucesso!", "id": new_game.id}), 201
 
-
 @app.route("/game/<int:game_id>", methods=["PUT"])
 @token_required
 def update_game(game_id):
     game = Game.query.get(game_id)
     if not game:
         return jsonify({"error": "Jogo não encontrado"}), 404
-    data = request.get_json()
-    game.title = data.get("title", game.title)
-    game.year = data.get("year", game.year)
-    game.price = data.get("price", game.price)
+    json_data = request.get_json()
+    validated_data = game_schema.load(json_data)
+
+    game.title = validated_data.get("title", game.title)
+    game.year = validated_data.get("year", game.year)
+    game.price = validated_data.get("price", game.price)
     db.session.commit()
+
     return jsonify({"message": "Jogo atualizado com sucesso."}), 200
 
 @app.route("/game/<int:game_id>", methods=["DELETE"])
@@ -129,6 +126,7 @@ def delete_game(game_id):
         return jsonify({"error": "Jogo não encontrado"}), 404
     db.session.delete(game)
     db.session.commit()
+
     return jsonify({"message": "Jogo excluído com sucesso."}), 200
 
 # ======= Tratamento Global de Erros =======
@@ -156,18 +154,14 @@ def method_not_allowed(error):
 def internal_server_error(error):
     return jsonify({"error": "Erro interno do servidor"}), 500
 
-from marshmallow import ValidationError
-
 @app.errorhandler(ValidationError)
 def handle_validation_error(error):
     return jsonify({"errors": error.messages}), 400
 
-
-# ========== Inicialização do banco e execução ==========
+# ======= Inicialização do banco e execução =======
 if __name__ == "__main__":
     with app.app_context():
         db.create_all()
-        # Cria usuário padrão se não existir
         if not User.query.filter_by(email="diego@email.com").first():
             user = User(name="Diego", email="diego@email.com", password="1234")
             db.session.add(user)
