@@ -13,8 +13,10 @@ CORS(app)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///gameverse.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = 'v3ry$3cur3&UnpredictableSecretKey!123'
+app.config['MAX_CONTENT_LENGTH'] = 1 * 1024 * 1024  # 1MB máximo para requisições
 db = SQLAlchemy(app)
 JWT_ALGORITHM = 'HS256'
+
 
 # ======= Modelos =======
 class User(db.Model):
