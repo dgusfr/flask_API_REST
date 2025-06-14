@@ -92,10 +92,8 @@ def get_game(game_id):
 def create_game():
     json_data = request.get_json()
     try:
-        # Valida dados usando schema do Marshmallow
         validated_data = game_schema.load(json_data)
     except ValidationError as err:
-        # Retorna mensagens claras dos erros
         return jsonify({"errors": err.messages}), 400
 
     new_game = Game(**validated_data)
