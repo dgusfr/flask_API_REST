@@ -161,7 +161,6 @@ def handle_validation_error(error):
 def request_entity_too_large(error):
     return jsonify({"error": "Requisição muito grande. Limite máximo é 1MB."}), 413
 
-
 # ======= Inicialização do banco e execução =======
 if __name__ == "__main__":
     with app.app_context():
