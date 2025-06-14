@@ -1,6 +1,5 @@
 from marshmallow import Schema, fields, validate, ValidationError
 
-# Schema para criação/edição de Game
 class GameSchema(Schema):
     title = fields.String(required=True, validate=validate.Length(min=1))
     year = fields.Integer(required=True, validate=validate.Range(min=1950, max=2100))
