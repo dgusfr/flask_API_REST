@@ -160,6 +160,11 @@ def internal_server_error(error):
 def handle_validation_error(error):
     return jsonify({"errors": error.messages}), 400
 
+@app.errorhandler(413)
+def request_entity_too_large(error):
+    return jsonify({"error": "Requisição muito grande. Limite máximo é 1MB."}), 413
+
+
 # ======= Inicialização do banco e execução =======
 if __name__ == "__main__":
     with app.app_context():
@@ -169,3 +174,4 @@ if __name__ == "__main__":
             db.session.add(user)
             db.session.commit()
     app.run(port=3000, debug=True)
+
