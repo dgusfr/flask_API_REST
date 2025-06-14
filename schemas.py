@@ -5,7 +5,6 @@ class GameSchema(Schema):
     year = fields.Integer(required=True, validate=validate.Range(min=1950, max=2100))
     price = fields.Float(required=True, validate=validate.Range(min=0.0))
 
-# Schema para login
 class LoginSchema(Schema):
     email = fields.Email(required=True)
     password = fields.String(required=True, validate=validate.Length(min=4))
