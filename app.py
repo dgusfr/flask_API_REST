@@ -5,6 +5,7 @@ import jwt
 import datetime
 from functools import wraps
 
+
 # ========== Configuração da aplicação ==========
 app = Flask(__name__)
 CORS(app)
@@ -85,16 +86,20 @@ def get_game(game_id):
 @app.route("/game", methods=["POST"])
 @token_required
 def create_game():
-    data = request.get_json()
-    title = data.get("title")
-    year = data.get("year")
-    price = data.get("price")
-    if not title or not year or not price:
-        return jsonify({"error": "Campos obrigatórios: title, year, price"}), 400
-    new_game = Game(title=title, year=year, price=price)
+    json_data = request.get_json()
+    try:
+        # Valida dados usando schema do Marshmallow
+        validated_data = game_schema.load(json_data)
+    except ValidationError as err:
+        # Retorna mensagens claras dos erros
+        return jsonify({"errors": err.messages}), 400
+
+    new_game = Game(**validated_data)
     db.session.add(new_game)
     db.session.commit()
+
     return jsonify({"message": "Jogo cadastrado com sucesso!", "id": new_game.id}), 201
+
 
 @app.route("/game/<int:game_id>", methods=["PUT"])
 @token_required
