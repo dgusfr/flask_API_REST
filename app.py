@@ -56,17 +56,24 @@ def home():
 
 @app.route("/auth", methods=["POST"])
 def login():
-    data = request.get_json()
-    email = data.get("email")
-    password = data.get("password")
-    user = User.query.filter_by(email=email).first()
-    if not user or user.password != password:
+    json_data = request.get_json()
+    try:
+        # Valida dados usando schema do Marshmallow
+        validated_data = login_schema.load(json_data)
+    except ValidationError as err:
+        # Retorna mensagens claras dos erros
+        return jsonify({"errors": err.messages}), 400
+
+    user = User.query.filter_by(email=validated_data["email"]).first()
+    if not user or user.password != validated_data["password"]:
         return jsonify({"error": "Credenciais inválidas!"}), 401
+
     token = jwt.encode({
         "id": user.id,
         "email": user.email,
         "exp": datetime.datetime.utcnow() + datetime.timedelta(hours=48)
     }, app.config['SECRET_KEY'], algorithm=JWT_ALGORITHM)
+
     return jsonify({"token": token}), 200
 
 @app.route("/games", methods=["GET"])
