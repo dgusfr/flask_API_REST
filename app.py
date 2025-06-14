@@ -131,6 +131,39 @@ def delete_game(game_id):
     db.session.commit()
     return jsonify({"message": "Jogo excluído com sucesso."}), 200
 
+# ======= Tratamento Global de Erros =======
+@app.errorhandler(400)
+def bad_request(error):
+    return jsonify({"error": "Requisição inválida"}), 400
+
+@app.errorhandler(401)
+def unauthorized(error):
+    return jsonify({"error": "Não autorizado"}), 401
+
+@app.errorhandler(403)
+def forbidden(error):
+    return jsonify({"error": "Proibido"}), 403
+
+@app.errorhandler(404)
+def not_found(error):
+    return jsonify({"error": "Recurso não encontrado"}), 404
+
+@app.errorhandler(405)
+def method_not_allowed(error):
+    return jsonify({"error": "Método não permitido"}), 405
+
+@app.errorhandler(500)
+def internal_server_error(error):
+    return jsonify({"error": "Erro interno do servidor"}), 500
+
+# Erro de validação Marshmallow
+from marshmallow import ValidationError
+
+@app.errorhandler(ValidationError)
+def handle_validation_error(error):
+    return jsonify({"errors": error.messages}), 400
+
+
 # ========== Inicialização do banco e execução ==========
 if __name__ == "__main__":
     with app.app_context():
