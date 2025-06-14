@@ -58,10 +58,8 @@ def home():
 def login():
     json_data = request.get_json()
     try:
-        # Valida dados usando schema do Marshmallow
         validated_data = login_schema.load(json_data)
     except ValidationError as err:
-        # Retorna mensagens claras dos erros
         return jsonify({"errors": err.messages}), 400
 
     user = User.query.filter_by(email=validated_data["email"]).first()
