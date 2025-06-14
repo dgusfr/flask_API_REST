@@ -7,7 +7,6 @@ from functools import wraps
 from schemas import GameSchema, LoginSchema
 from marshmallow import ValidationError
 
-# ======= Configuração =======
 app = Flask(__name__)
 CORS(app)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///gameverse.db'
