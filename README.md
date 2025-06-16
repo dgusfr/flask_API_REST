@@ -19,9 +19,6 @@ API REST desenvolvida com Python + Flask para gerenciamento de jogos com autenti
 
 <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
   <img src="images/python.png" alt="Logo Python" width="120"/>
-  <img src="images/flask.png" alt="Logo Flask" width="110"/>
-  <img src="images/sqlite.png" alt="Logo SQLite" width="90"/>
-  <img src="images/postman.png" alt="Logo Postman" width="90"/>
 </div>
 
 ---
