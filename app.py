@@ -64,6 +64,7 @@ def login():
 
     user = User.query.filter_by(email=validated_data["email"]).first()
     if not user or user.password != validated_data["password"]:
+        app.logger.warning(f"Tentativa falha de login com email: {validated_data['email']}")
         return jsonify({"error": "Credenciais inválidas!"}), 401
 
     token = jwt.encode({
@@ -72,7 +73,9 @@ def login():
         "exp": datetime.datetime.utcnow() + datetime.timedelta(hours=48)
     }, app.config['SECRET_KEY'], algorithm=JWT_ALGORITHM)
 
+    app.logger.info(f"Login bem-sucedido: {user.email}")
     return jsonify({"token": token}), 200
+
 
 @app.route("/games", methods=["GET"])
 @token_required
