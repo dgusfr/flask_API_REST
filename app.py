@@ -104,6 +104,7 @@ def create_game():
     db.session.add(new_game)
     db.session.commit()
 
+    app.logger.info(f"Jogo cadastrado por usuário {request.user_email}: {new_game.title}")
     return jsonify({"message": "Jogo cadastrado com sucesso!", "id": new_game.id}), 201
 
 @app.route("/game/<int:game_id>", methods=["PUT"])
