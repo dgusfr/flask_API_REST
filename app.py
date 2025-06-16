@@ -76,7 +76,6 @@ def login():
     app.logger.info(f"Login bem-sucedido: {user.email}")
     return jsonify({"token": token}), 200
 
-
 @app.route("/games", methods=["GET"])
 @token_required
 def list_games():
