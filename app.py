@@ -3,9 +3,12 @@ from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
 import jwt
 import datetime
+import logging
 from functools import wraps
 from schemas import GameSchema, LoginSchema
 from marshmallow import ValidationError
+from logging.handlers import RotatingFileHandler
+
 
 app = Flask(__name__)
 CORS(app)
@@ -160,6 +163,17 @@ def handle_validation_error(error):
 @app.errorhandler(413)
 def request_entity_too_large(error):
     return jsonify({"error": "Requisição muito grande. Limite máximo é 1MB."}), 413
+
+# ======= Configuração dos Logs =======
+handler = RotatingFileHandler('api.log', maxBytes=1000000, backupCount=3)
+handler.setLevel(logging.INFO)
+formatter = logging.Formatter(
+    '%(asctime)s %(levelname)s %(message)s [em %(pathname)s:%(lineno)d]'
+)
+handler.setFormatter(formatter)
+app.logger.addHandler(handler)
+app.logger.setLevel(logging.INFO)
+
 
 # ======= Inicialização do banco e execução =======
 if __name__ == "__main__":
