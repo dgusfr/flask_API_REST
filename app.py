@@ -157,6 +157,7 @@ def method_not_allowed(error):
 
 @app.errorhandler(500)
 def internal_server_error(error):
+    app.logger.error(f"Erro interno do servidor: {error}")
     return jsonify({"error": "Erro interno do servidor"}), 500
 
 @app.errorhandler(ValidationError)
