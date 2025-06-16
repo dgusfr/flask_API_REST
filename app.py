@@ -37,7 +37,6 @@ app.logger.addHandler(handler)
 app.logger.setLevel(logging.INFO)
 
 # ======= Modelos do Banco de Dados =======
-
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(80), nullable=False)
