@@ -3,21 +3,40 @@ from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
 import jwt
 import datetime
-import logging
 from functools import wraps
 from schemas import GameSchema, LoginSchema
 from marshmallow import ValidationError
+import logging
 from logging.handlers import RotatingFileHandler
+from dotenv import load_dotenv
+import os
 
+# Carrega as variáveis do arquivo .env
+load_dotenv()
 
+# ======= Configuração =======
 app = Flask(__name__)
 CORS(app)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///gameverse.db'
+
+# Configurações usando variáveis de ambiente
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SECRET_KEY'] = 'v3ry$3cur3&UnpredictableSecretKey!123'
-app.config['MAX_CONTENT_LENGTH'] = 1 * 1024 * 1024  
+app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
+JWT_ALGORITHM = os.getenv('JWT_ALGORITHM')
+
 db = SQLAlchemy(app)
-JWT_ALGORITHM = 'HS256'
+
+# ======= Configuração dos Logs =======
+handler = RotatingFileHandler('api.log', maxBytes=1000000, backupCount=3)
+handler.setLevel(logging.INFO)
+formatter = logging.Formatter(
+    '%(asctime)s %(levelname)s %(message)s [em %(pathname)s:%(lineno)d]'
+)
+handler.setFormatter(formatter)
+app.logger.addHandler(handler)
+app.logger.setLevel(logging.INFO)
+
+# ======= Modelos do Banco de Dados =======
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
