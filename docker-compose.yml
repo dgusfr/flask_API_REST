@@ -8,29 +8,15 @@ services:
     ports:
       - "3000:3000"
     volumes:
-      # Monta o código local no container para desenvolvimento com hot-reload
+      # Monta o código local para hot-reload e o volume de dados para persistir o DB
       - .:/app
+      - sqlite_data:/app/data
     environment:
-      # A URL do banco de dados agora aponta para o serviço 'db'
-      - DATABASE_URL=postgresql://gameverse_user:supersecretpassword@db:5432/gameverse_db
+      # A URL agora aponta para um arquivo SQLite dentro do volume de dados
+      - DATABASE_URL=sqlite:////app/data/gameverse.db
       - SECRET_KEY=minha-chave-secreta-super-segura-do-compose
       - JWT_ALGORITHM=HS256
-    depends_on:
-      - db # Garante que o banco de dados inicie antes da API
-
-  # Serviço do Banco de Dados PostgreSQL
-  db:
-    image: postgres:15-alpine
-    container_name: gameverse-db-service
-    environment:
-      - POSTGRES_USER=gameverse_user
-      - POSTGRES_PASSWORD=supersecretpassword
-      - POSTGRES_DB=gameverse_db
-    volumes:
-      - postgres_data:/var/lib/postgresql/data # Persiste os dados do banco
-    ports:
-      - "5432:5432" # Opcional: expõe a porta do DB para o host
 
 volumes:
-  # Define o volume nomeado para persistência dos dados
-  postgres_data:
+  # Define o volume nomeado para persistência dos dados do SQLite
+  sqlite_data:
