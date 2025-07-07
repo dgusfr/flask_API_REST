@@ -3,6 +3,7 @@ from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
 import jwt
 import datetime
+from werkzeug.security import generate_password_hash, check_password_hash
 from functools import wraps
 from schemas import GameSchema, LoginSchema
 from marshmallow import ValidationError
@@ -42,7 +43,15 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(80), nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
-    password = db.Column(db.String(120), nullable=False)
+    password_hash = db.Column(db.String(256), nullable=False)
+
+    def set_password(self, password):
+        """Cria um hash seguro da senha."""
+        self.password_hash = generate_password_hash(password)
+
+    def check_password(self, password):
+        """Verifica se a senha fornecida corresponde ao hash armazenado."""
+        return check_password_hash(self.password_hash, password)
 
 
 class Game(db.Model):
@@ -90,7 +99,7 @@ def login():
     validated = login_schema.load(json_data)
 
     user = User.query.filter_by(email=validated["email"]).first()
-    if not user or user.password != validated["password"]:
+    if not user or not user.check_password(validated["password"]):
         app.logger.warning(f"Tentativa de login falhou para {validated['email']}")
         return jsonify({"error": "Credenciais inválidas!"}), 401
 
