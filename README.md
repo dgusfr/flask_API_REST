@@ -141,20 +141,9 @@ Remove um game pelo ID.
 Desenvolvido por Diego Franco
 
 
-Como usar
-Com esses arquivos no seu projeto, você pode construir e executar o container com os seguintes comandos:
 
-Construir a imagem Docker:
-
-bash
 docker build -t gameverse-api .
-Executar o container:
 
-bash
-docker run -p 3000:3000 -d --name gameverse-container \
-  -e DATABASE_URL="<sua_url_do_banco_de_dados>" \
-  -e SECRET_KEY="<sua_chave_secreta>" \
-  -e JWT_ALGORITHM="HS256" \
-  gameverse-api
-Note que as variáveis de ambiente (DATABASE_URL, SECRET_KEY, etc.) são passadas para o container durante a execução com a flag -e. Isso mantém suas credenciais seguras e fora da imagem Docker.
+
+docker run -d -p 3000:3000 --name gameverse-api-container -v gameverse_db_data:/app/data -e DATABASE_URL="sqlite:////app/data/gameverse.db" -e SECRET_KEY="<sua_chave_secreta_super_segura>" -e JWT_ALGORITHM="HS256" gameverse-api
 

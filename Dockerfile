@@ -20,4 +20,4 @@ COPY . .
 EXPOSE 3000
 
 # Comando para iniciar a aplicação com Gunicorn
-CMD ["gunicorn", "--bind", "0.0.0.0:3000", "app:app"]
+CMD ["gunicorn", "--bind", "0.0.0.0:3000", "app:app", "--reload"]
