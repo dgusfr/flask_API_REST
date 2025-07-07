@@ -16,5 +16,6 @@ services:
       - SECRET_KEY=minha-chave-secreta-super-segura-do-compose
       - JWT_ALGORITHM=HS256
 
+# Declara o volume nomeado que será gerenciado pelo Docker
 volumes:
   sqlite_data:
