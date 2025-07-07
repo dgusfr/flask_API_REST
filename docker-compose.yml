@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  # Serviço da API Flask
+  api:
+    build: .
+    container_name: gameverse-api-service
+    ports:
+      - "3000:3000"
+    volumes:
+      # Monta o código local no container para desenvolvimento com hot-reload
+      - .:/app
+    environment:
+      # A URL do banco de dados agora aponta para o serviço 'db'
+      - DATABASE_URL=postgresql://gameverse_user:supersecretpassword@db:5432/gameverse_db
+      - SECRET_KEY=minha-chave-secreta-super-segura-do-compose
+      - JWT_ALGORITHM=HS256
+    depends_on:
+      - db # Garante que o banco de dados inicie antes da API
+
+  # Serviço do Banco de Dados PostgreSQL
+  db:
+    image: postgres:15-alpine
+    container_name: gameverse-db-service
+    environment:
+      - POSTGRES_USER=gameverse_user
+      - POSTGRES_PASSWORD=supersecretpassword
+      - POSTGRES_DB=gameverse_db
+    volumes:
+      - postgres_data:/var/lib/postgresql/data # Persiste os dados do banco
+    ports:
+      - "5432:5432" # Opcional: expõe a porta do DB para o host
+
+volumes:
+  # Define o volume nomeado para persistência dos dados
+  postgres_data:
