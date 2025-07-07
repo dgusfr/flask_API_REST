@@ -1,7 +1,6 @@
 version: '3.8'
 
 services:
-  # Serviço da API Flask
   api:
     build: .
     container_name: gameverse-api-service
@@ -18,5 +17,4 @@ services:
       - JWT_ALGORITHM=HS256
 
 volumes:
-  # Define o volume nomeado para persistência dos dados do SQLite
   sqlite_data:
