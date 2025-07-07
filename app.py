@@ -273,11 +273,19 @@ def validation(e):
     return jsonify({"errors": e.messages}), 400
 
 
+# =================== Comandos CLI ===================
+@app.cli.command("seed-db")
+def seed_db():
+    """Popula o banco de dados com dados iniciais."""
+    db.create_all()
+    if not User.query.filter_by(email="diego@email.com").first():
+        new_user = User(name="Diego", email="diego@email.com")
+        new_user.set_password("1234")
+        db.session.add(new_user)
+        db.session.commit()
+        print("Usuário inicial criado.")
+
+
 # =================== inicialização & seed ===================
 if __name__ == "__main__":
-    with app.app_context():
-        db.create_all()
-        if not User.query.filter_by(email="diego@email.com").first():
-            db.session.add(User(name="Diego", email="diego@email.com", password="1234"))
-            db.session.commit()
     app.run(port=3000, debug=True)
