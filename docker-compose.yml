@@ -10,11 +10,8 @@ services:
       # Monta o código local para hot-reload e o volume de dados para persistir o DB
       - .:/app
       - sqlite_data:/app/data
-    environment:
-      # A URL agora aponta para um arquivo SQLite dentro do volume de dados
-      - DATABASE_URL=sqlite:////app/data/gameverse.db
-      - SECRET_KEY=minha-chave-secreta-super-segura-do-compose
-      - JWT_ALGORITHM=HS256
+    env_file:
+      - .env
 
 # Declara o volume nomeado que será gerenciado pelo Docker
 volumes:
